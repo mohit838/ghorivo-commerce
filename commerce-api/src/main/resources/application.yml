@@ -3,7 +3,7 @@ spring:
     name: commerce-api
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/ghorivo_commerce}
+    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
