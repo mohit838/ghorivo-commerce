@@ -59,4 +59,46 @@ class UserAccountTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("role must not be null");
     }
+
+    @Test
+    void shouldDeactivateActiveUser() {
+        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
+        Instant deactivatedAt = Instant.parse("2026-09-23T11:00:00Z");
+
+        UserAccount user = UserAccount.create(
+                "Mohit Islam",
+                "mohit@example.com",
+                "encoded-password",
+                UserRole.STAFF,
+                createdAt
+        );
+
+        user.deactivate(deactivatedAt);
+
+        assertThat(user.status()).isEqualTo(UserStatus.INACTIVE);
+        assertThat(user.updatedAt()).isEqualTo(deactivatedAt);
+    }
+
+
+    // Idempotency test
+    @Test
+    void shouldNotChangeTimestampWhenAlreadyInactive() {
+        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
+        Instant firstChange = Instant.parse("2026-09-23T11:00:00Z");
+        Instant retryTime = Instant.parse("2026-09-23T12:00:00Z");
+
+        UserAccount user = UserAccount.create(
+                "Mohit Islam",
+                "mohit@example.com",
+                "encoded-password",
+                UserRole.STAFF,
+                createdAt
+        );
+
+        user.deactivate(firstChange);
+        user.deactivate(retryTime);
+
+        assertThat(user.status()).isEqualTo(UserStatus.INACTIVE);
+        assertThat(user.updatedAt()).isEqualTo(firstChange);
+    }
 }

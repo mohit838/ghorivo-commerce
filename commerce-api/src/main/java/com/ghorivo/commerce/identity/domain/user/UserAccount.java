@@ -122,6 +122,33 @@ public class UserAccount {
     }
 
 
+    public void activate(Instant changedAt) {
+        changeStatus(UserStatus.ACTIVE, changedAt);
+    }
+
+    public void deactivate(Instant changedAt) {
+        changeStatus(UserStatus.INACTIVE, changedAt);
+    }
+
+    private void changeStatus(UserStatus newStatus, Instant changedAt) {
+        Objects.requireNonNull(newStatus, "newStatus must not be null");
+        Objects.requireNonNull(changedAt, "changedAt must not be null");
+
+        if (changedAt.isBefore(createdAt)) {
+            throw new IllegalArgumentException(
+                    "changedAt must not be before createdAt"
+            );
+        }
+
+        if (status == newStatus) {
+            return;
+        }
+
+        status = newStatus;
+        updatedAt = changedAt;
+    }
+
+
     // Helper Method
     private static String normalizeEmail(String email) {
         return requireText(email, "email")
