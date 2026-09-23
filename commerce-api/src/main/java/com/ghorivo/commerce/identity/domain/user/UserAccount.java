@@ -93,6 +93,35 @@ public class UserAccount {
     }
 
 
+    public UUID id() {
+        return id;
+    }
+
+    public String fullName() {
+        return fullName;
+    }
+
+    public String email() {
+        return email;
+    }
+
+    public UserRole role() {
+        return role;
+    }
+
+    public UserStatus status() {
+        return status;
+    }
+
+    public Instant createdAt() {
+        return createdAt;
+    }
+
+    public Instant updatedAt() {
+        return updatedAt;
+    }
+
+
     // Helper Method
     private static String normalizeEmail(String email) {
         return requireText(email, "email")
