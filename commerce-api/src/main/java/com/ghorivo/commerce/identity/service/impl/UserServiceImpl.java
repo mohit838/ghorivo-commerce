@@ -6,11 +6,15 @@ import com.ghorivo.commerce.identity.exception.DuplicateUserEmailException;
 import com.ghorivo.commerce.identity.repository.UserAccountRepository;
 import com.ghorivo.commerce.identity.security.PasswordHasher;
 import com.ghorivo.commerce.identity.service.UserService;
+import com.ghorivo.commerce.identity.util.EmailNormalizer;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.util.Objects;
 
-public final class UserServiceImpl implements UserService {
+@Service
+public class UserServiceImpl implements UserService {
 
     private final UserAccountRepository repository;
     private final PasswordHasher passwordHasher;
@@ -27,6 +31,7 @@ public final class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserAccount create(CreateUserRequestDto request) {
         Objects.requireNonNull(request, "request must not be null");
 
@@ -37,21 +42,25 @@ public final class UserServiceImpl implements UserService {
             );
         }
 
+        String normalizedEmail = EmailNormalizer.normalize(
+                request.email()
+        );
+
+        if (repository.existsByEmail(normalizedEmail)) {
+            throw new DuplicateUserEmailException(normalizedEmail);
+        }
+
         String passwordHash = passwordHasher.hash(
                 request.rawPassword()
         );
 
         UserAccount user = UserAccount.create(
                 request.fullName(),
-                request.email(),
+                normalizedEmail,
                 passwordHash,
                 request.role(),
                 clock.instant()
         );
-
-        if (repository.existsByEmail(user.email())) {
-            throw new DuplicateUserEmailException(user.email());
-        }
 
         return repository.save(user);
     }

@@ -2,6 +2,7 @@ package com.ghorivo.commerce.identity.entity;
 
 import com.ghorivo.commerce.identity.constants.UserRole;
 import com.ghorivo.commerce.identity.constants.UserStatus;
+import com.ghorivo.commerce.identity.util.EmailNormalizer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -86,7 +87,7 @@ public class UserAccount {
         return new UserAccount(
                 UUID.randomUUID(),
                 requireText(fullName, "fullName"),
-                normalizeEmail(email),
+                EmailNormalizer.normalize(email),
                 requireText(passwordHash, "passwordHash"),
                 role,
                 UserStatus.ACTIVE,
@@ -118,11 +119,6 @@ public class UserAccount {
 
         status = newStatus;
         updatedAt = changedAt;
-    }
-
-    private static String normalizeEmail(String email) {
-        return requireText(email, "email")
-                .toLowerCase(Locale.ROOT);
     }
 
     private static String requireText(String value, String fieldName) {
