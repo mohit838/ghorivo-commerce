@@ -1,8 +1,7 @@
-package com.ghorivo.commerce.identity.infrastructure.persistence;
+package com.ghorivo.commerce.identity.repository;
 
-import com.ghorivo.commerce.identity.domain.user.UserAccount;
-import com.ghorivo.commerce.identity.domain.user.UserAccountRepository;
-import com.ghorivo.commerce.identity.domain.user.UserRole;
+import com.ghorivo.commerce.identity.constants.UserRole;
+import com.ghorivo.commerce.identity.entity.UserAccount;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class JpaUserAccountRepositoryAdapterTest {
+class UserAccountRepositoryTest {
 
     @Autowired
     private UserAccountRepository repository;
@@ -27,8 +26,13 @@ class JpaUserAccountRepositoryAdapterTest {
 
     @Test
     void shouldSaveAndFindUserByEmail() {
-        String email = "repository-" + UUID.randomUUID() + "@example.com";
-        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
+        String email = "repository-"
+                + UUID.randomUUID()
+                + "@example.com";
+
+        Instant createdAt = Instant.parse(
+                "2026-09-23T10:00:00Z"
+        );
 
         UserAccount user = UserAccount.create(
                 "Repository Test User",
@@ -43,11 +47,15 @@ class JpaUserAccountRepositoryAdapterTest {
         entityManager.flush();
         entityManager.clear();
 
-        Optional<UserAccount> result = repository.findByEmail(email);
+        Optional<UserAccount> result =
+                repository.findByEmail(email);
 
         assertThat(result).isPresent();
-        assertThat(result.orElseThrow().id()).isEqualTo(user.id());
-        assertThat(result.orElseThrow().email()).isEqualTo(email);
-        assertThat(result.orElseThrow().role()).isEqualTo(UserRole.STAFF);
+
+        UserAccount savedUser = result.orElseThrow();
+
+        assertThat(savedUser.id()).isEqualTo(user.id());
+        assertThat(savedUser.email()).isEqualTo(email);
+        assertThat(savedUser.role()).isEqualTo(UserRole.STAFF);
     }
 }

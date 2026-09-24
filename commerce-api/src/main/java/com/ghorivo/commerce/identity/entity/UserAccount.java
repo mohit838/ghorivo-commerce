@@ -1,5 +1,7 @@
-package com.ghorivo.commerce.identity.domain.user;
+package com.ghorivo.commerce.identity.entity;
 
+import com.ghorivo.commerce.identity.constants.UserRole;
+import com.ghorivo.commerce.identity.constants.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,10 +9,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import java.util.Locale;
-import java.util.Objects;
 
 import java.time.Instant;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -49,6 +51,7 @@ public class UserAccount {
     private Instant updatedAt;
 
     protected UserAccount() {
+        // Required by JPA
     }
 
     private UserAccount(
@@ -70,7 +73,6 @@ public class UserAccount {
         this.updatedAt = createdAt;
     }
 
-    // Factory Method
     public static UserAccount create(
             String fullName,
             String email,
@@ -91,36 +93,6 @@ public class UserAccount {
                 createdAt
         );
     }
-
-
-    public UUID id() {
-        return id;
-    }
-
-    public String fullName() {
-        return fullName;
-    }
-
-    public String email() {
-        return email;
-    }
-
-    public UserRole role() {
-        return role;
-    }
-
-    public UserStatus status() {
-        return status;
-    }
-
-    public Instant createdAt() {
-        return createdAt;
-    }
-
-    public Instant updatedAt() {
-        return updatedAt;
-    }
-
 
     public void activate(Instant changedAt) {
         changeStatus(UserStatus.ACTIVE, changedAt);
@@ -148,8 +120,6 @@ public class UserAccount {
         updatedAt = changedAt;
     }
 
-
-    // Helper Method
     private static String normalizeEmail(String email) {
         return requireText(email, "email")
                 .toLowerCase(Locale.ROOT);
@@ -157,9 +127,47 @@ public class UserAccount {
 
     private static String requireText(String value, String fieldName) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(fieldName + " must not be blank");
+            throw new IllegalArgumentException(
+                    fieldName + " must not be blank"
+            );
         }
 
         return value.trim();
+    }
+
+    public UUID id() {
+        return id;
+    }
+
+    public String fullName() {
+        return fullName;
+    }
+
+    public String email() {
+        return email;
+    }
+
+    public String passwordHash() {
+        return passwordHash;
+    }
+
+    public UserRole role() {
+        return role;
+    }
+
+    public UserStatus status() {
+        return status;
+    }
+
+    public long version() {
+        return version;
+    }
+
+    public Instant createdAt() {
+        return createdAt;
+    }
+
+    public Instant updatedAt() {
+        return updatedAt;
     }
 }

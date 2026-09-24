@@ -1,4 +1,4 @@
-package com.ghorivo.commerce.identity.application.user;
+package com.ghorivo.commerce.identity.exception;
 
 public class DuplicateUserEmailException extends RuntimeException {
 

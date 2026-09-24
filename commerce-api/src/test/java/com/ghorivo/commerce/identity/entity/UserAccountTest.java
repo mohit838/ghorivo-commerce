@@ -1,5 +1,7 @@
-package com.ghorivo.commerce.identity.domain.user;
+package com.ghorivo.commerce.identity.entity;
 
+import com.ghorivo.commerce.identity.constants.UserRole;
+import com.ghorivo.commerce.identity.constants.UserStatus;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -11,7 +13,9 @@ class UserAccountTest {
 
     @Test
     void shouldCreateActiveUserWithNormalizedEmail() {
-        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
+        Instant createdAt = Instant.parse(
+                "2026-09-23T10:00:00Z"
+        );
 
         UserAccount user = UserAccount.create(
                 "Mohit Islam",
@@ -32,7 +36,9 @@ class UserAccountTest {
 
     @Test
     void shouldRejectBlankEmail() {
-        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
+        Instant createdAt = Instant.parse(
+                "2026-09-23T10:00:00Z"
+        );
 
         assertThatThrownBy(() -> UserAccount.create(
                 "Mohit Islam",
@@ -47,7 +53,9 @@ class UserAccountTest {
 
     @Test
     void shouldRejectNullRole() {
-        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
+        Instant createdAt = Instant.parse(
+                "2026-09-23T10:00:00Z"
+        );
 
         assertThatThrownBy(() -> UserAccount.create(
                 "Mohit Islam",
@@ -62,8 +70,12 @@ class UserAccountTest {
 
     @Test
     void shouldDeactivateActiveUser() {
-        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
-        Instant deactivatedAt = Instant.parse("2026-09-23T11:00:00Z");
+        Instant createdAt = Instant.parse(
+                "2026-09-23T10:00:00Z"
+        );
+        Instant deactivatedAt = Instant.parse(
+                "2026-09-23T11:00:00Z"
+        );
 
         UserAccount user = UserAccount.create(
                 "Mohit Islam",
@@ -79,13 +91,17 @@ class UserAccountTest {
         assertThat(user.updatedAt()).isEqualTo(deactivatedAt);
     }
 
-
-    // Idempotency test
     @Test
     void shouldNotChangeTimestampWhenAlreadyInactive() {
-        Instant createdAt = Instant.parse("2026-09-23T10:00:00Z");
-        Instant firstChange = Instant.parse("2026-09-23T11:00:00Z");
-        Instant retryTime = Instant.parse("2026-09-23T12:00:00Z");
+        Instant createdAt = Instant.parse(
+                "2026-09-23T10:00:00Z"
+        );
+        Instant firstChange = Instant.parse(
+                "2026-09-23T11:00:00Z"
+        );
+        Instant retryTime = Instant.parse(
+                "2026-09-23T12:00:00Z"
+        );
 
         UserAccount user = UserAccount.create(
                 "Mohit Islam",

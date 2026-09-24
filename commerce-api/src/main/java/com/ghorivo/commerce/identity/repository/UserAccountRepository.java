@@ -1,12 +1,12 @@
-package com.ghorivo.commerce.identity.infrastructure.persistence;
+package com.ghorivo.commerce.identity.repository;
 
-import com.ghorivo.commerce.identity.domain.user.UserAccount;
+import com.ghorivo.commerce.identity.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface SpringDataUserAccountRepository
+public interface UserAccountRepository
         extends JpaRepository<UserAccount, UUID> {
 
     Optional<UserAccount> findByEmail(String email);

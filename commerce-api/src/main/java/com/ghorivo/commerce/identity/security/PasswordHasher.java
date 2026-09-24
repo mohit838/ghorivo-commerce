@@ -1,4 +1,4 @@
-package com.ghorivo.commerce.identity.application.security;
+package com.ghorivo.commerce.identity.security;
 
 public interface PasswordHasher {
 

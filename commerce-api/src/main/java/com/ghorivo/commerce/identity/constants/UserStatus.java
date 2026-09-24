@@ -1,4 +1,4 @@
-package com.ghorivo.commerce.identity.domain.user;
+package com.ghorivo.commerce.identity.constants;
 
 public enum UserStatus {
     ACTIVE,
